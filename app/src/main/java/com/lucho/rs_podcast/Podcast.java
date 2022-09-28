@@ -3,7 +3,6 @@ package com.lucho.rs_podcast;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.util.Log;
 
 import com.lucho.rs_podcast.exceptions.InitPodcastException;
 import com.lucho.rs_podcast.exceptions.MediaPlayerPlayException;
@@ -21,7 +20,6 @@ public class Podcast {
     private Track trackLoaded =null;
     private int pauseLength;
     private Boolean readyForLooping=false;
-    private Boolean isReleased;
     private String podcastState;
 
     public Podcast(Context mContext) throws InitPodcastException {
@@ -58,7 +56,6 @@ public class Podcast {
         try {
             podcastState = "PLAYING";
             mPlayer = new MediaPlayer();
-            isReleased = false;
             mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mPlayer.setLooping(false);
             String nextTrack = getTrack();
@@ -88,7 +85,6 @@ public class Podcast {
     public void stop() {
         podcastState ="STOPPED";
         mPlayer.stop();
-        isReleased=true;
         mPlayer=null;
         pauseLength=0;
         trackLoaded =null;
@@ -96,13 +92,6 @@ public class Podcast {
 
     public Track getSongLoaded() {
         return trackLoaded;
-    }
-
-    public boolean isPlaying() {
-        if (mPlayer!=null && !isReleased) {
-            return mPlayer.isPlaying();
-        }
-        return false;
     }
 
     public Boolean getReadyForLooping() {
