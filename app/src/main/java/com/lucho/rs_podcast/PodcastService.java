@@ -156,8 +156,6 @@ public class PodcastService extends Service {
             builder.addAction(R.drawable.play_20, "Play", pendingIntentPlay);
             builder.setContentTitle("Ready for playing...");
             builder.setContentText("");
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             cover = BitmapFactory.decodeResource(getResources(), R.raw.rsgirlbw3);
         }else {
             switch(podcast.getState()) {

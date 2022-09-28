@@ -84,7 +84,7 @@ public class Podcast {
 
     public void stop() {
         podcastState ="STOPPED";
-        mPlayer.stop();
+        if(mPlayer!=null) mPlayer.stop();
         mPlayer=null;
         pauseLength=0;
         trackLoaded =null;

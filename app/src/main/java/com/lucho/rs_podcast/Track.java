@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -14,7 +15,6 @@ public class Track {
     private String trackAlbum;
     private Bitmap trackCover;
     private Boolean trackInfoUpdated;
-
 
     public Track(Context mContext, String url){
         trackTitle ="Trying to retrieve track info...";
@@ -35,21 +35,32 @@ public class Track {
             if(trackTitle==null) trackTitle ="Title not found";
             trackAlbum =mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             if(trackAlbum==null) trackAlbum ="Album not found";
-            try {
+            byte[] artBytes = mmr.getEmbeddedPicture();
+            if (artBytes!=null) {
+                trackCover = BitmapFactory.decodeStream(new ByteArrayInputStream(mmr.getEmbeddedPicture()));
+            } else {
                 int i;
                 for(i=url.length()-1; i>=0;i--){
                     if(url.charAt(i)=='/') break;
                 }
                 String urlImg = url.substring(0,i+1) + "Cover.jpg";
-                trackCover =BitmapFactory.decodeStream(new URL(urlImg).openConnection().getInputStream());
-            } catch (IOException e) {
-                trackCover = BitmapFactory.decodeResource(mContext.getResources(), R.raw.rsgirlbw3);
-                trackInfoUpdated =true;
-                e.printStackTrace();
+                try {
+                    trackCover =BitmapFactory.decodeStream(new URL(urlImg).openConnection().getInputStream());
+                } catch (IOException e) {
+                    for(i=urlImg.length()-1; i>=0;i--){
+                        if(urlImg.charAt(i)=='/') break;
+                    }
+                    urlImg = urlImg.substring(0,i+1) + "Cover.jpg";
+                    try {
+                        trackCover =BitmapFactory.decodeStream(new URL(urlImg).openConnection().getInputStream());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
+            if(trackCover==null) trackCover = BitmapFactory.decodeResource(mContext.getResources(), R.raw.rsgirlbw3);
             trackInfoUpdated =true;
         });
-
         searchInfo.start();
     }
 
