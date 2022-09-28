@@ -2,7 +2,7 @@
 
 Android app for listening to Rolling Stones songs. If you don't know them hahahha it's the best rock n' roll band ever. The podcast includes the entire official albums, and some inedited live shows, like Paris and Bruselas in the 70's.
 
-It runs as a service in the notification area, and requires internet connection, only, and you can get the latest apk here:
+It runs as a service in the notification area, and requires internet connection, only. You can get the latest apk here:
 
 Enjoy itttttt!
 
