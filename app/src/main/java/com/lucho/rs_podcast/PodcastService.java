@@ -15,6 +15,8 @@ import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -41,6 +43,7 @@ public class PodcastService extends Service {
     private static PodcastService podcastService;
     private final PodcastServiceBinder binder = new PodcastServiceBinder();
     private Track trackPlaying =null;
+    private MediaSessionCompat mediaSession;
 
     public IBinder onBind(Intent intent) {
         return binder;
@@ -82,6 +85,12 @@ public class PodcastService extends Service {
                 if(podcast.getReadyForLooping() && podcast.getState().equals("PLAYING")) play();
             }
         },0,1000);
+        configureMediaSession();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mediaSession != null) mediaSession.release();
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -201,5 +210,21 @@ public class PodcastService extends Service {
                 podcastService.exit();
             }
         }
+    }
+
+    private void configureMediaSession() {
+        mediaSession = new MediaSessionCompat(this, "MyMediaSession");
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                KeyEvent ke = mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                if (ke != null && ke.getAction() == KeyEvent.ACTION_DOWN && ke.getKeyCode()==KeyEvent.KEYCODE_MEDIA_NEXT) next();
+                if (ke != null && ke.getAction() == KeyEvent.ACTION_DOWN && ke.getKeyCode()==KeyEvent.KEYCODE_MEDIA_PLAY) play();
+                if (ke != null && ke.getAction() == KeyEvent.ACTION_DOWN && ke.getKeyCode()==KeyEvent.KEYCODE_MEDIA_PAUSE) pause();
+                return super.onMediaButtonEvent(mediaButtonIntent);
+            }
+        });
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setActive(true);
     }
 }

@@ -17,7 +17,7 @@ public class Track {
     private Boolean trackInfoUpdated;
 
     public Track(Context mContext, String url){
-        trackTitle ="Trying to retrieve track info...";
+        trackTitle ="Retrieving track info...";
         trackAlbum ="";
         trackCover = BitmapFactory.decodeResource(mContext.getResources(), R.raw.rsgirlbw3);
         trackInfoUpdated =false;
