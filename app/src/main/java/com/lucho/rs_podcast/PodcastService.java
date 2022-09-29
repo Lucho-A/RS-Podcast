@@ -119,7 +119,7 @@ public class PodcastService extends Service {
             timerFetchingTrackInfo.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (trackPlaying.getTrackInfoUpdated()) {
+                    if (trackPlaying!=null && trackPlaying.getTrackInfoUpdated()) {
                         actualizar_notification();
                         timerFetchingTrackInfo.cancel();
                     }
