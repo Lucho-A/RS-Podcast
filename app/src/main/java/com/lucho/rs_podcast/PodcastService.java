@@ -37,13 +37,16 @@ public class PodcastService extends Service {
     private PendingIntent pendingIntentNext;
     private PendingIntent pendingIntentPause;
     private PendingIntent pendingIntentStop;
+    private PendingIntent pendingIntentEject;
     private PendingIntent pendingIntentExit;
+    private Podcast podcast;
     @SuppressLint("StaticFieldLeak")
-    private static Podcast podcast;
     private static PodcastService podcastService;
     private final PodcastServiceBinder binder = new PodcastServiceBinder();
     private Track trackPlaying =null;
     private MediaSessionCompat mediaSession;
+    private int playlistSelected=0;
+    private Context mContext;
 
     public IBinder onBind(Intent intent) {
         return binder;
@@ -53,13 +56,15 @@ public class PodcastService extends Service {
 
     @SuppressLint("UnspecifiedImmutableFlag")
     public void onCreate() {
+        mContext = this.getApplicationContext();
         Intent intentPlay = new Intent(this, NotificationReceiver.class);
         Intent intentNext = new Intent(this, NotificationReceiver.class);
         Intent intentPause = new Intent(this, NotificationReceiver.class);
         Intent intentStop = new Intent(this, NotificationReceiver.class);
+        Intent intentEject = new Intent(this, NotificationReceiver.class);
         Intent intentExit = new Intent(this, NotificationReceiver.class);
         try {
-            podcast = new Podcast(this.getApplicationContext());
+            podcast = new Podcast(mContext,playlistSelected);
         } catch (InitPodcastException e) {
             Toast.makeText(podcastService, e.getMsg(), Toast.LENGTH_LONG).show();
             exit();
@@ -73,10 +78,12 @@ public class PodcastService extends Service {
         pendingIntentPause = PendingIntent.getBroadcast(this, 0, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
         intentStop.setAction("STOP");
         pendingIntentStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+        intentEject.setAction("EJECT");
+        pendingIntentEject = PendingIntent.getBroadcast(this, 0, intentEject, PendingIntent.FLAG_UPDATE_CURRENT);
         intentExit.setAction("EXIT");
         pendingIntentExit = PendingIntent.getBroadcast(this, 0, intentExit, PendingIntent.FLAG_UPDATE_CURRENT);
         startForeground(NOTIFICATION_ID, crear_notification());
-        Toast.makeText(getApplicationContext(), "App started OK. Running in notification area.", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "App started OK. Running in notification area.", Toast.LENGTH_LONG).show();
         actualizar_notification();
         Timer askForLooping=new Timer();
         askForLooping.schedule(new TimerTask() {
@@ -145,12 +152,25 @@ public class PodcastService extends Service {
         actualizar_notification();
     }
 
+    public void change_playlist(){
+        playlistSelected++;
+        try {
+            podcast=new Podcast(mContext, playlistSelected);
+        } catch (InitPodcastException e) {
+            Toast.makeText(podcastService, e.getMsg(), Toast.LENGTH_LONG).show();
+            exit();
+        }
+        //Toast.makeText(mContext, "Playlist selected: " + podcast.getPlaylist(playlistSelected), Toast.LENGTH_LONG).show();
+        trackPlaying=null;
+        actualizar_notification();
+    }
+
     private Notification crear_notification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Service Notification", NotificationManager.IMPORTANCE_LOW);
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+            builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setSmallIcon(R.drawable.icono_pop_w_16)
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle());
@@ -163,8 +183,9 @@ public class PodcastService extends Service {
         Bitmap cover=null;
         if(trackPlaying==null){
             builder.addAction(R.drawable.play_20, "Play", pendingIntentPlay);
+            builder.addAction(R.drawable.eject_20, "Eject", pendingIntentEject);
             builder.setContentTitle("Ready for playing...");
-            builder.setContentText("");
+            builder.setContentText("Playlist selected: " + podcast.getPlaylist(playlistSelected));
             cover = BitmapFactory.decodeResource(getResources(), R.raw.rsgirlbw3);
         }else {
             switch(podcast.getState()) {
@@ -191,7 +212,7 @@ public class PodcastService extends Service {
             builder.setColor(Color.argb(125, Color.red(pixel), Color.green(pixel), Color.blue(pixel)));
             builder.setColorized(true);
         }
-        builder.addAction(R.drawable.eject_20, "Exit", pendingIntentExit);
+        builder.addAction(R.drawable.exit_20, "Exit", pendingIntentExit);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
@@ -205,6 +226,8 @@ public class PodcastService extends Service {
                 podcastService.pause();
             } else if (Objects.equals(intent.getAction(),"STOP")){
                 podcastService.stop();
+            } else if (Objects.equals(intent.getAction(),"EJECT")){
+                podcastService.change_playlist();
             } else if (Objects.equals(intent.getAction(),"EXIT")){
                 podcastService.stop();
                 podcastService.exit();

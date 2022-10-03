@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" tools:remove="android:maxSdkVersion"/>
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:remove="android:maxSdkVersion" />
 
     <application
         android:allowBackup="true"
@@ -19,34 +21,44 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
         <service
-            android:name="com.lucho.rs_podcast.PodcastService"
+            android:name=".PodcastService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="mediaPlayback"
-            />
-        <receiver android:name="com.lucho.rs_podcast.PodcastService$NotificationReceiver" android:exported="false">
+            android:foregroundServiceType="mediaPlayback" />
+
+        <receiver
+            android:name=".PodcastService$NotificationReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="PLAY" />
                 <action android:name="NEXT" />
                 <action android:name="PAUSE" />
                 <action android:name="STOP" />
+                <action android:name="EJECT" />
                 <action android:name="EXIT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="androidx.media.session.MediaButtonReceiver" android:exported="true">
+        <receiver
+            android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
         <meta-data
             android:name="android.app.lib_name"
             android:value="" />
     </application>
+
 </manifest>

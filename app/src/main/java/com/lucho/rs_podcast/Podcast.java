@@ -21,23 +21,54 @@ public class Podcast {
     private int pauseLength;
     private Boolean readyForLooping=false;
     private String podcastState;
+    private final ArrayList<String> playlists = new ArrayList<>();
 
-    public Podcast(Context mContext) throws InitPodcastException {
+    public Podcast(Context mContext, int playlistSelected) throws InitPodcastException {
         this.mContext=mContext;
-        init_podcast();
+        init_podcast(playlistSelected);
     }
 
-    private void init_podcast() throws InitPodcastException {
+    private void init_podcast(int playlistSelected) throws InitPodcastException {
+        playlists.add("All");
+        playlists.add("Studio");
+        playlists.add("Live");
+        playlists.add("Compilations");
+        playlists.add("Box Sets");
+        playlists.add("Singles");
         podcastState ="STOPPED";
         songs = new ArrayList<>();
+        BufferedReader in=new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links)));
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links)));
+            switch (playlistSelected % playlists.size()){
+                case 0:
+                     in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links)));
+                    break;
+                case 1:
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_studio)));
+                    break;
+                case 2:
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_live)));
+                    break;
+                case 3:
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_compilations)));
+                    break;
+                case 4:
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_box_sets)));
+                    break;
+                case 5:
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_singles)));
+                    break;
+            }
             String s;
             while((s=in.readLine())!=null) songs.add(s);
             in.close();
         } catch (Exception e) {
             throw new InitPodcastException(e);
         }
+    }
+
+    public String getPlaylist(int playlistSelected){
+        return playlists.get(playlistSelected % playlists.size());
     }
 
     private String getTrack(){
