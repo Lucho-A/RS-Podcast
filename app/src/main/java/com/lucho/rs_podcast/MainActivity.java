@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private Intent intent;
     private final static int REQUEST_CODE_ASK_PERMISSIONS=1;
     private static final String[] REQUIRED_SDK_PERMISSIONS=new String[]{
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.FOREGROUND_SERVICE
     };
 
     @Override

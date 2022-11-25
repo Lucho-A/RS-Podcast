@@ -71,17 +71,17 @@ public class PodcastService extends Service {
         }
         podcastService = this;
         intentPlay.setAction("PLAY");
-        pendingIntentPlay = PendingIntent.getBroadcast(this, 0, intentPlay, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentPlay = PendingIntent.getBroadcast(this, 0, intentPlay, PendingIntent.FLAG_IMMUTABLE);
         intentNext.setAction("NEXT");
-        pendingIntentNext = PendingIntent.getBroadcast(this, 0, intentNext, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentNext = PendingIntent.getBroadcast(this, 0, intentNext, PendingIntent.FLAG_IMMUTABLE);
         intentPause.setAction("PAUSE");
-        pendingIntentPause = PendingIntent.getBroadcast(this, 0, intentPause, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentPause = PendingIntent.getBroadcast(this, 0, intentPause, PendingIntent.FLAG_IMMUTABLE);
         intentStop.setAction("STOP");
-        pendingIntentStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentStop = PendingIntent.getBroadcast(this, 0, intentStop, PendingIntent.FLAG_IMMUTABLE);
         intentEject.setAction("EJECT");
-        pendingIntentEject = PendingIntent.getBroadcast(this, 0, intentEject, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentEject = PendingIntent.getBroadcast(this, 0, intentEject, PendingIntent.FLAG_IMMUTABLE);
         intentExit.setAction("EXIT");
-        pendingIntentExit = PendingIntent.getBroadcast(this, 0, intentExit, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentExit = PendingIntent.getBroadcast(this, 0, intentExit, PendingIntent.FLAG_IMMUTABLE);
         startForeground(NOTIFICATION_ID, crear_notification());
         Toast.makeText(mContext, "App started OK. Running in notification area.", Toast.LENGTH_LONG).show();
         actualizar_notification();

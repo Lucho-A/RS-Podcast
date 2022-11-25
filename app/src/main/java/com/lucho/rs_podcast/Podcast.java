@@ -37,26 +37,27 @@ public class Podcast {
         playlists.add("Singles");
         podcastState ="STOPPED";
         songs = new ArrayList<>();
-        BufferedReader in=new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links)));
+        BufferedReader in=new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.linksv2)));
         try {
             switch (playlistSelected % playlists.size()){
                 case 0:
-                     in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links)));
+                     in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.linksv2)));
                     break;
                 case 1:
-                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_studio)));
+                    //in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_studio)));
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_studiov2)));
                     break;
                 case 2:
-                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_live)));
+                    //in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_live)));
                     break;
                 case 3:
-                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_compilations)));
+                    //in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_compilations)));
                     break;
                 case 4:
-                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_box_sets)));
+                    //in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_box_sets)));
                     break;
                 case 5:
-                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_singles)));
+                    in = new BufferedReader(new InputStreamReader(mContext.getResources().openRawResource(R.raw.links_singlesv2)));
                     break;
             }
             String s;
