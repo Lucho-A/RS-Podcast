@@ -9,7 +9,7 @@ Enjoy itttttt!!!
 __Nov-2022 Update__: sadly, the url where it was hosted the songs it was closed (I suppose because copyright issues). Anyway, it can be useful for any podcast, so I let the repository just for the code. 
 
 <p align="center">
-<img height="300" src="https://user-images.githubusercontent.com/40904281/192660100-2e176bbc-e63b-45cf-b309-38559457fcec.png">
+<img height="400" src="https://user-images.githubusercontent.com/40904281/192660100-2e176bbc-e63b-45cf-b309-38559457fcec.png">
 </p>
 
 <p align="center">
